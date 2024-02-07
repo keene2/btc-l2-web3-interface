@@ -11,7 +11,7 @@ export function SendBitcoin() {
   const [txid, setTxid] = useState('');
 
   const handleSubmitSend = async ({ toAddress, toAmount: satoshis }) => {
-    // console.log('wwwwwwwwww: ', toAddress, satoshis, unisat);
+
 
     try {
       const txid = await (window as any).unisat.sendBitcoin(
