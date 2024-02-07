@@ -1,26 +1,10 @@
 import { PROJECT_ADDRESS } from '@/consts';
 import { IMAGES } from '@/consts/images';
-import {
-  addressAtom,
-  connectedAtom,
-  publicKeyAtom,
-  txidsAtom,
-} from '@/features/unisatCore';
-import { NumUtils } from '@/helpers/Numutils';
+import { addressAtom, connectedAtom, publicKeyAtom, txidsAtom } from '@/features/unisatCore';
+import { btcToSats } from '@/helpers';
 import http from '@/helpers/http';
 import { WalletOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Divider,
-  Flex,
-  Form,
-  Image,
-  Input,
-  Radio,
-  Select,
-  Typography,
-  message,
-} from 'antd';
+import { Button, Divider, Flex, Form, Image, Input, Radio, Select, Typography, message } from 'antd';
 import { useAtom, useAtomValue } from 'jotai';
 import { useState } from 'react';
 import styles from '../index.less';
@@ -53,10 +37,7 @@ export const DepositWithdrawalForm = () => {
     try {
       const signature = await (window as any).unisat.signMessage(toAddressLow);
 
-      const txid = await (window as any).unisat.sendBitcoin(
-        PROJECT_ADDRESS,
-        parseInt(toAmount),
-      );
+      const txid = await (window as any).unisat.sendBitcoin(PROJECT_ADDRESS, btcToSats(toAmount));
       message.success('success');
 
       const res = await http.post('sign', {
@@ -98,28 +79,12 @@ export const DepositWithdrawalForm = () => {
           name="toAmount"
           labelCol={{ span: 24 }}
           label={<Text type="secondary">Transfer from</Text>}
+          rules={[{ required: true, message: 'Please input to amount!' }]}
         >
           <CustomFromAmoutInput disibled={isSignatured} />
         </Form.Item>
         <Text type="secondary">Transfer to</Text>
-        <Form.Item
-          name="toAddress"
-          rules={[
-            { required: true, message: 'Please input to address!' },
-            // ({ getFieldValue,value }) => ({
-            //
-            //   validator(_, value) {
-            //     if (!value || getFieldValue('password') === value) {
-            //       return Promise.resolve();
-            //     }
-            //     return Promise.reject(
-            //       new Error('The new password that you entered do not match!'),
-            //     );
-            //   },
-            // }),
-            // { validator: isAddress, message: 'Please input to address!' },
-          ]}
-        >
+        <Form.Item name="toAddress" rules={[{ required: true, message: 'Please input to address!' }]}>
           <Flex className={styles.inputWrap} align="center" vertical={false}>
             <Input
               variant="borderless"
@@ -134,12 +99,7 @@ export const DepositWithdrawalForm = () => {
           </Flex>
         </Form.Item>
 
-        <Form.Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) =>
-            prevValues.toAmount !== currentValues.toAmount
-          }
-        >
+        <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues.toAmount !== currentValues.toAmount}>
           {({ getFieldValue }) => (
             <Flex className={styles.inputWrap} align="center" vertical={false}>
               <Flex className={styles.inputLeftWrap} align="center" gap={4}>
@@ -148,24 +108,14 @@ export const DepositWithdrawalForm = () => {
               </Flex>
               <Flex flex={1} align="end" vertical>
                 <Flex className="t3">Receive</Flex>
-                <Text className="f16 fw5">
-                  {getFieldValue('toAmount')
-                    ? NumUtils.displayAmount(getFieldValue('toAmount'))
-                    : 0}
-                </Text>
+                <Text className="f16 fw5">{getFieldValue('toAmount') ? getFieldValue('toAmount') : 0}</Text>
               </Flex>
             </Flex>
           )}
         </Form.Item>
 
         <Form.Item style={{ marginTop: '40px' }}>
-          <Button
-            block
-            size="large"
-            type="primary"
-            htmlType="submit"
-            disabled={!connected || isSignatured}
-          >
+          <Button block size="large" type="primary" htmlType="submit" disabled={!connected || isSignatured}>
             {!connected ? 'Please Connect Wallet' : 'Confirm'}
           </Button>
         </Form.Item>

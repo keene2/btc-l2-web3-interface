@@ -135,7 +135,9 @@ export default function Layout({}) {
         }}
       >
         <div className="demo-logo f0 mr20">
-          <Image preview={false} src={LOGO} width={40} height={40} />
+          <Link to={'/'}>
+            <Image preview={false} src={LOGO} width={40} height={40} />
+          </Link>
         </div>
         <Flex flex={1}>
           <Menu theme="dark" mode="horizontal" selectedKeys={[location.pathname.replace('/', '')]}>
@@ -156,7 +158,7 @@ export default function Layout({}) {
             ))}
           </Menu>
         </Flex>
-        <Flex flex={1} justify="end" gap="18px" align="center">
+        <Flex justify="end" gap="18px" align="center">
           <a href={LINKS.Twitter} target="_blank" className="df">
             <img src={twitter_fff} width={20} height={20} alt="twitter" style={{ fontSize: 0, fill: '#fff' }} />
           </a>

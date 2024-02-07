@@ -2,6 +2,7 @@ import { defineConfig } from 'umi';
 
 export default defineConfig({
   title: 'ZKSats: The first ZK Rollup Bitcoin Layer 2 network',
+  favicons: ['/favicon.png'],
   metas: [
     {
       name: 'keywords',
@@ -23,11 +24,11 @@ export default defineConfig({
     { path: '/bridge', component: 'Bridge' },
   ],
   npmClient: 'pnpm',
-  proxy: {
-    '/api': {
-      target: 'https://api.zksats.io',
-      changeOrigin: true,
-      pathRewrite: { '^/api': '' },
-    },
-  },
+  // proxy: {
+  //   '/api': {
+  //     target: 'https://api.zksats.io',
+  //     changeOrigin: true,
+  //     pathRewrite: { '^/api': '' },
+  //   },
+  // },
 });

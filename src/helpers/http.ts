@@ -2,7 +2,9 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: '/api', // 填写你的基础URL
+  // baseURL: '/api', // 填写你的基础URL
+  baseURL: 'https://api.zksats.io/', // 填写你的基础URL
+  // https://api.zksats.io/sign
   timeout: 12000, // 请求超时时间
   headers: {
     'Content-Type': 'application/json',

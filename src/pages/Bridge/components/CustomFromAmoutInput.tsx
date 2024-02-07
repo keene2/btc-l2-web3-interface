@@ -2,7 +2,7 @@ import { Button, Flex, Image, InputNumber, Typography } from 'antd';
 
 import { IMAGES } from '@/consts/images';
 import { balanceAtom } from '@/features/unisatCore';
-import { NumUtils } from '@/helpers/Numutils';
+import { satsToBTC } from '@/helpers';
 import Decimal from 'decimal.js';
 import { useAtomValue } from 'jotai';
 import styles from '../index.less';
@@ -21,9 +21,7 @@ export const CustomFromAmoutInput = ({ value, onChange, disibled }) => {
         </Flex>
         <Flex flex={1} align="end" vertical>
           <Flex className="t3">Balance</Flex>
-          <Text className="f16 fw5">
-            {NumUtils.displayAmount(balance?.total)}
-          </Text>
+          <Text className="f16 fw5">{satsToBTC(balance?.total)}</Text>
         </Flex>
       </Flex>
       <Flex className={styles.fromInputBottomWrap} align="center" vertical>
@@ -31,11 +29,11 @@ export const CustomFromAmoutInput = ({ value, onChange, disibled }) => {
           controls={false}
           wheel={false}
           value={value}
-          min={1}
-          precision={0}
+          min={0}
+          max={satsToBTC(balance?.total)}
           disabled={disibled}
           onChange={(value) => {
-            onChange(value);
+            onChange(value === null ? null : new Decimal(value).toDecimalPlaces(8).toNumber());
           }}
           variant="borderless"
           className={styles.customFromInput + ' f24 fw5'}
@@ -52,13 +50,8 @@ export const CustomFromAmoutInput = ({ value, onChange, disibled }) => {
                   size="small"
                   type="text"
                   onClick={() => {
-                    onChange(
-                      parseInt(
-                        new Decimal(item.value).mul(balance.total).toString(),
-                      ),
-                    );
+                    onChange(satsToBTC(parseInt(new Decimal(item.value || 0).mul(balance.total).toString())));
                   }}
-                  // onClick={() => handleButtonClick(item.value)}
                 >
                   {item.label}
                 </Button>
