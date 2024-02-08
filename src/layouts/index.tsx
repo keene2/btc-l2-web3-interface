@@ -7,7 +7,7 @@ import tg_fff from '@/assets/logo/tg_fff.svg';
 import twitter_fff from '@/assets/logo/twitter_fff.svg';
 import { Network } from '@/consts';
 import { LINKS } from '@/consts/links';
-import { addressAtom, balanceAtom, connectedAtom, publicKeyAtom, unisatInstalledAtom } from '@/features/unisatCore';
+import { addressAtom, balanceAtom, connectedAtom, networkAtom, publicKeyAtom, unisatInstalledAtom } from '@/features/unisatCore';
 import { ConnectWalletButton } from '@/features/wallet';
 import { Divider, Flex, Image, Layout as LayoutComponent, Menu, Tooltip, Typography } from 'antd';
 import { useAtom } from 'jotai';
@@ -43,15 +43,8 @@ export default function Layout({}) {
   const [publicKey, setPublicKey] = useAtom(publicKeyAtom);
   const [address, setAddress] = useAtom(addressAtom);
   const [balance, setBalance] = useAtom(balanceAtom);
-  const [network, setNetwork] = useState(Network.livenet);
+  const [network, setNetwork] = useAtom(networkAtom);
   const location = useLocation();
-  // if (location.pathname === '/login') {
-  //   return (
-  //     <SimpleLayout>
-  //       <Outlet />
-  //     </SimpleLayout>
-  //   );
-  // }
 
   const getBasicInfo = async () => {
     const unisat = (window as any).unisat;

@@ -1,10 +1,11 @@
-import { PROJECT_ADDRESS } from '@/consts';
+import { Network, PROJECT_ADDRESS } from '@/consts';
 import { IMAGES } from '@/consts/images';
-import { addressAtom, connectedAtom, publicKeyAtom, txidsAtom } from '@/features/unisatCore';
-import { btcToSats } from '@/helpers';
+import { LINKS } from '@/consts/links';
+import { addressAtom, connectedAtom, networkAtom, publicKeyAtom, txidsAtom } from '@/features/unisatCore';
+import { btcToSats, removeTrailingZeros } from '@/helpers';
 import http from '@/helpers/http';
 import { WalletOutlined } from '@ant-design/icons';
-import { Button, Divider, Flex, Form, Image, Input, Radio, Select, Typography, message } from 'antd';
+import { Button, Divider, Flex, Form, Image, Input, Radio, Select, Typography, message, notification } from 'antd';
 import { useAtom, useAtomValue } from 'jotai';
 import { useState } from 'react';
 import styles from '../index.less';
@@ -26,6 +27,7 @@ export const DepositWithdrawalForm = () => {
   const [txids, setTxids] = useAtom(txidsAtom);
   const [isSignatured, setIsSignatured] = useState(false);
   const [form] = Form.useForm();
+  const network = useAtomValue(networkAtom);
 
   const handleButtonClick = (value: number) => {
     form.setFieldsValue({ from: value });
@@ -36,9 +38,19 @@ export const DepositWithdrawalForm = () => {
     const toAddressLow = toAddress.toLowerCase();
     try {
       const signature = await (window as any).unisat.signMessage(toAddressLow);
-
       const txid = await (window as any).unisat.sendBitcoin(PROJECT_ADDRESS, btcToSats(toAmount));
-      message.success('success');
+      notification.open({
+        type: 'success',
+        message: 'Transaction submitted',
+        description: (
+          <Text>
+            TxId is{' '}
+            <Link href={`${LINKS.Mempool}/${network === Network.livenet ? '' : 'testnet/'}tx/${txid}`} target="_blank">
+              {txid}
+            </Link>
+          </Text>
+        ),
+      });
 
       const res = await http.post('sign', {
         from: address,
@@ -49,7 +61,6 @@ export const DepositWithdrawalForm = () => {
       setTxids([...txids, txid]);
     } catch (e) {
       message.error(e.message);
-      // setTxids((e as any).message);
     } finally {
       setIsSignatured(false);
     }
@@ -103,12 +114,12 @@ export const DepositWithdrawalForm = () => {
           {({ getFieldValue }) => (
             <Flex className={styles.inputWrap} align="center" vertical={false}>
               <Flex className={styles.inputLeftWrap} align="center" gap={4}>
-                <Image src={IMAGES.logo} width={20} height={20} />
+                <Image preview={false} src={IMAGES.logo} width={20} height={20} />
                 <Text>ZkSats</Text>
               </Flex>
               <Flex flex={1} align="end" vertical>
                 <Flex className="t3">Receive</Flex>
-                <Text className="f16 fw5">{getFieldValue('toAmount') ? getFieldValue('toAmount') : 0}</Text>
+                <Text className="f16 fw5">{getFieldValue('toAmount') ? removeTrailingZeros(getFieldValue('toAmount').toFixed(8)) : 0}</Text>
               </Flex>
             </Flex>
           )}

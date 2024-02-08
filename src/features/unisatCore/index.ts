@@ -1,3 +1,4 @@
+import { Network } from '@/consts';
 import { atom } from 'jotai';
 
 // export const unisatAtom = atom(null);
@@ -10,6 +11,7 @@ export const unisatInstalledAtom = atom(false);
 export const toAddressAtom = atom('');
 export const txidsAtom = atom([]);
 
+export const networkAtom = atom(Network.livenet);
 // subscribe
 // export const unisatStore = createStore();
 //

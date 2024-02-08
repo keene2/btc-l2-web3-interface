@@ -22,3 +22,15 @@ export function btcToSats(btcAmount) {
   }
   return parseInt(new Decimal(btcAmount).mul(100000000).toString());
 }
+
+export function removeTrailingZeros(num) {
+  let strNum = num.toString();
+  // 如果数字有小数点
+  if (strNum.indexOf('.') !== -1) {
+    // 去除尾部的0
+    strNum = strNum.replace(/0+$/, '');
+    // 如果数字以.结尾，去除这个.
+    strNum = strNum.replace(/\.$/, '');
+  }
+  return strNum;
+}
