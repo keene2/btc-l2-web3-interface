@@ -1,16 +1,12 @@
 import { displaySortAddress } from '@/helpers';
+import { isMobileAtom } from '@/states';
 import { Button, Typography } from 'antd';
+import { useAtomValue } from 'jotai';
 
 const { Text } = Typography;
 
-export const ConnectWalletButton = ({
-  connected,
-  unisatInstalled,
-  handleAccountsChanged,
-  handleNetworkChanged,
-  address,
-  network,
-}: any) => {
+export const ConnectWalletButton = ({ connected, unisatInstalled, handleAccountsChanged, handleNetworkChanged, address, network }: any) => {
+  const isMobile = useAtomValue(isMobileAtom);
   if (!unisatInstalled) {
     return (
       <div className="App">
@@ -42,11 +38,7 @@ export const ConnectWalletButton = ({
             {displaySortAddress(address)}
           </Button>
           {network !== 'livenet' ? (
-            <Button
-              type="default"
-              style={{ marginLeft: '12px' }}
-              onClick={handleNetworkChanged}
-            >
+            <Button type="default" style={{ marginLeft: '12px' }} onClick={handleNetworkChanged}>
               <Text style={{ color: '#e85f5f' }} className="f12">
                 {network}
               </Text>
@@ -55,7 +47,7 @@ export const ConnectWalletButton = ({
         </>
       ) : (
         <Button
-          type="primary"
+          // type="primary"
           onClick={async () => {
             const result = await (window as any).unisat.requestAccounts();
             handleAccountsChanged(result);

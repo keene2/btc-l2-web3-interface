@@ -1,40 +1,14 @@
-import LOGO from '@/assets/logo/LOGO.png';
-import footer1 from '@/assets/logo/footer1.svg';
-import footer2 from '@/assets/logo/footer2.svg';
-import footer3 from '@/assets/logo/footer3.svg';
-import footer4 from '@/assets/logo/footer4.svg';
-import tg_fff from '@/assets/logo/tg_fff.svg';
-import twitter_fff from '@/assets/logo/twitter_fff.svg';
 import { Network } from '@/consts';
-import { LINKS } from '@/consts/links';
 import { addressAtom, balanceAtom, connectedAtom, networkAtom, publicKeyAtom, unisatInstalledAtom } from '@/features/unisatCore';
-import { ConnectWalletButton } from '@/features/wallet';
-import { Divider, Flex, Image, Layout as LayoutComponent, Menu, Tooltip, Typography } from 'antd';
-import { useAtom } from 'jotai';
+import { isMobileAtom } from '@/states';
+import { Layout as LayoutComponent } from 'antd';
+import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
-import { Link, Outlet, useLocation } from 'umi';
+import { Outlet, useLocation } from 'umi';
+import { FooterView, MenusView } from './components/Menus';
 import s from './index.less';
 
 const { Header, Content, Footer } = LayoutComponent;
-
-const items = [
-  { key: '', label: 'Home', showInFooter: false },
-  { key: 'bridge', label: 'Bridge', showInFooter: true },
-  { key: 'staking', label: 'Staking', disabled: true, showInFooter: true },
-  {
-    key: 'explorer',
-    label: 'Explorer',
-    href: LINKS.Explorer,
-    showInFooter: true,
-  },
-  { key: 'ecosystem', label: 'Ecosystem', showInFooter: true },
-  {
-    key: 'documentation',
-    label: 'Documentation',
-    href: LINKS.GitBook,
-    showInFooter: true,
-  },
-];
 
 export default function Layout({}) {
   const [unisatInstalled, setUnisatInstalled] = useAtom(unisatInstalledAtom);
@@ -45,6 +19,7 @@ export default function Layout({}) {
   const [balance, setBalance] = useAtom(balanceAtom);
   const [network, setNetwork] = useAtom(networkAtom);
   const location = useLocation();
+  const isMobile = useAtomValue(isMobileAtom);
 
   const getBasicInfo = async () => {
     const unisat = (window as any).unisat;
@@ -120,104 +95,22 @@ export default function Layout({}) {
 
   return (
     <LayoutComponent className={s.layout}>
-      <Header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          background: 'transparent',
-        }}
-      >
-        <div className="demo-logo f0 mr20">
-          <Link to={'/'}>
-            <Image preview={false} src={LOGO} width={40} height={40} />
-          </Link>
-        </div>
-        <Flex flex={1}>
-          <Menu theme="dark" mode="horizontal" selectedKeys={[location.pathname.replace('/', '')]}>
-            {items.map((item, index) => (
-              <Menu.Item key={item.key} disabled={item.disabled}>
-                {item.disabled ? (
-                  <Tooltip placement="topLeft" title="comming soom">
-                    <Typography.Text style={{ color: 'rgba(255, 255, 255, 0.65)' }}>{item.label}</Typography.Text>
-                  </Tooltip>
-                ) : item.href ? (
-                  <a style={{ color: 'rgba(255, 255, 255, 0.65)' }} href={item.href} target="_blank">
-                    {item.label}
-                  </a>
-                ) : (
-                  <Link to={`/${item.key}`}>{item.label}</Link>
-                )}
-              </Menu.Item>
-            ))}
-          </Menu>
-        </Flex>
-        <Flex justify="end" gap="18px" align="center">
-          <a href={LINKS.Twitter} target="_blank" className="df">
-            <img src={twitter_fff} width={20} height={20} alt="twitter" style={{ fontSize: 0, fill: '#fff' }} />
-          </a>
-          <a href={LINKS.TG} target="_blank" className="df">
-            <img src={tg_fff} width={20} height={20} alt={'tg'} style={{ fontSize: 0, color: '#fff' }} />
-          </a>
-          {/*</Flex>*/}
-          <ConnectWalletButton
-            connected={connected}
-            network={network}
-            unisatInstalled={unisatInstalled}
-            address={address}
-            handleAccountsChanged={handleAccountsChanged}
-            handleNetworkChanged={async () => {
-              const network = await unisat.switchNetwork('livenet');
-              setNetwork(network);
-            }}
-          />
-        </Flex>
+      <Header className="flex xs:px-4 lg:px-6" style={{ background: isMobile ? '#001529' : 'transparent' }}>
+        <MenusView
+          connected={connected}
+          setAccounts={setAccounts}
+          setConnected={setConnected}
+          handleAccountsChanged={handleAccountsChanged}
+          address={address}
+          unisatInstalled={unisatInstalled}
+          network={network}
+          setNetwork={setNetwork}
+          handleNetworkChanged={handleNetworkChanged}
+        />
       </Header>
-      <Outlet />
 
-      <Footer className="mxauto mt80">
-        <Flex vertical align="center" gap={32}>
-          <Image preview={false} src={LOGO} width={40} height={40} />
-          <Flex gap={48}>
-            {items
-              .filter((i) => i.showInFooter)
-              .map((item, index) => (
-                <div key={index}>
-                  {item.disabled ? (
-                    <Tooltip placement="topLeft" title="comming soom">
-                      <Typography.Text style={{ color: 'rgba(255, 255, 255, 0.65)' }}>{item.label}</Typography.Text>
-                    </Tooltip>
-                  ) : item.href ? (
-                    <a
-                      // style={{ color: 'rgba(255, 255, 255, 0.65)' }}
-                      href={item.href}
-                      target="_blank"
-                    >
-                      {item.label}
-                    </a>
-                  ) : (
-                    <Link to={`/${item.key}`}>{item.label}</Link>
-                  )}
-                </div>
-              ))}
-          </Flex>
-          <Flex gap={32}>
-            {[
-              { img: footer1, href: LINKS.Twitter },
-              { img: footer2, href: LINKS.TG },
-              { img: footer3, href: LINKS.GitHub },
-              { img: footer4, href: LINKS.GitBook },
-            ].map((item) => (
-              <a href={item.href} target="_blank">
-                <Image preview={false} src={item.img} width={24} height={24} />
-              </a>
-            ))}
-          </Flex>
-        </Flex>
-        <Divider />
-        <Flex style={{ width: '100%', height: '60px' }} align="center" justify="center">
-          <Typography.Text type="secondary">Copyright © 2023-2024 zksats.io</Typography.Text>
-        </Flex>
-      </Footer>
+      <Outlet />
+      {isMobile ? null : <FooterView />}
     </LayoutComponent>
   );
 }

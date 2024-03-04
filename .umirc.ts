@@ -15,7 +15,7 @@ export default defineConfig({
         'ZKSats is a decentralized Bitcoin ZK rollup second-layer network that can increase transaction speeds and expand application diversity without sacrificing security.',
     },
   ],
-  plugins: ['@umijs/plugins/dist/react-query', '@umijs/plugins/dist/valtio'],
+  plugins: ['@umijs/plugins/dist/react-query', '@umijs/plugins/dist/valtio', '@umijs/plugins/dist/tailwindcss'],
   reactQuery: {},
   valtio: {},
   routes: [
@@ -31,4 +31,5 @@ export default defineConfig({
   //     pathRewrite: { '^/api': '' },
   //   },
   // },
+  tailwindcss: {},
 });
