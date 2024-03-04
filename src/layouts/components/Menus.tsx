@@ -99,11 +99,13 @@ export const MenusView: React.FC = ({
                     <Typography.Text style={{ color: 'rgba(255, 255, 255, 0.65)' }}>{item.label}</Typography.Text>
                   </Tooltip>
                 ) : item.href ? (
-                  <a style={{ color: 'rgba(255, 255, 255, 0.65)' }} href={item.href} target="_blank">
+                  <a style={{ color: 'rgba(255, 255, 255, 0.65)' }} href={item.href} target="_blank" onClick={closeMenu}>
                     {item.label}
                   </a>
                 ) : (
-                  <Link to={`/${item.key}`}>{item.label}</Link>
+                  <Link onClick={closeMenu} to={`/${item.key}`}>
+                    {item.label}
+                  </Link>
                 )}
               </Menu.Item>
             ))}
@@ -174,11 +176,7 @@ export const FooterView = () => {
                     <Typography.Text style={{ color: 'rgba(255, 255, 255, 0.65)' }}>{item.label}</Typography.Text>
                   </Tooltip>
                 ) : item.href ? (
-                  <a
-                    // style={{ color: 'rgba(255, 255, 255, 0.65)' }}
-                    href={item.href}
-                    target="_blank"
-                  >
+                  <a href={item.href} target="_blank">
                     {item.label}
                   </a>
                 ) : (

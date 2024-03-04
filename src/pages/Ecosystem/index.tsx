@@ -15,7 +15,7 @@ export default function Ecosystem() {
   const bannerDom = useMemo(() => {
     const titleTextDom = (
       <>
-        <Typography.Text className="text-4xl font-semibold">Unlocking the Power of Bitcoin #OnZKSats</Typography.Text>
+        <Typography.Text className="lg:text-4xl xs:text-3xl font-semibold">Unlocking the Power of Bitcoin #OnZKSats</Typography.Text>
         <Typography.Text type="secondary" className="lg:text-xl xs:text-sm">
           Explore decentralized apps built on ZKSats, the secure and reliable Bitcoin L2 solution. Discover exciting apps for finance,
           collectibles, games, and many more! Experience the future of Bitcoin now!
@@ -23,8 +23,28 @@ export default function Ecosystem() {
       </>
     );
     return isMobile ? (
-      <Flex vertical gap={5}>
+      <Flex vertical gap={10}>
         {titleTextDom}
+
+        <Flex>
+          <Button
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              flexDirection: 'row-reverse',
+            }}
+            className="xs:my-3"
+            shape="round"
+            type="primary"
+            href={LINKS.ListYourDAPPForm}
+            target="_blank"
+            icon={<ArrowRightOutlined className={s.arrow} />}
+          >
+            List Your dApp Now
+          </Button>
+        </Flex>
+        <img width="100%" src={homeBannerImg} />
       </Flex>
     ) : (
       <Flex vertical={false} justify="space-between">
@@ -72,9 +92,9 @@ export default function Ecosystem() {
       }}
     >
       {bannerDom}
-      <Flex style={{ marginTop: '80px' }} justify="center" align="center" flex={1} vertical>
+      <Flex className="lg:mt-20 xs:mt-4" justify="center" align="center" flex={1} vertical>
         <Typography.Title level={2}>Explore all dApps</Typography.Title>
-        <Row gutter={[16, 16]} wrap>
+        <Row gutter={[16, 16]} wrap className="lg:mt-10 xs:mt-4">
           {ALL_DATA.map((item, index) => (
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} key={index}>
               <a href={item.href} target="_blank" className={s.card}>
