@@ -12,8 +12,8 @@ const instance = axios.create({
 });
 
 // get 请求函数
-export function get(url, params) {
-  return instance.get(url, { params });
+export function get(url, params?: any) {
+  return instance.get(url, { params }).then((res) => res.data);
 }
 
 // post 请求函数

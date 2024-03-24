@@ -1,11 +1,22 @@
+import disconnectIcon from '@/assets/icon/disconnect-icon.svg';
 import { displaySortAddress } from '@/helpers';
 import { isMobileAtom } from '@/states';
-import { Button, Typography } from 'antd';
+import { CaretDownOutlined, CopyOutlined, RightOutlined, WalletOutlined } from '@ant-design/icons';
+import { Button, Divider, Dropdown, Flex, Typography, message } from 'antd';
 import { useAtomValue } from 'jotai';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
-export const ConnectWalletButton = ({ connected, unisatInstalled, handleAccountsChanged, handleNetworkChanged, address, network }: any) => {
+export const ConnectWalletButton = ({
+  balance,
+  connected,
+  unisatInstalled,
+  handleAccountsChanged,
+  handleNetworkChanged,
+  address,
+  network,
+}: any) => {
   const isMobile = useAtomValue(isMobileAtom);
   if (!unisatInstalled) {
     return (
@@ -25,18 +36,74 @@ export const ConnectWalletButton = ({ connected, unisatInstalled, handleAccounts
     );
   }
 
+  const items = [
+    {
+      key: 1,
+      label: (
+        <div style={{ background: '#212026', borderRadius: '10px' }} className="p16">
+          <Flex vertical>
+            <Flex justify="space-between">
+              <Text className="t3">Wallet Address</Text>
+              <CopyToClipboard
+                onCopy={() => {
+                  message.info('copy success!');
+                }}
+                text={address}
+              >
+                <CopyOutlined
+                  style={{
+                    color: '#87868C',
+                  }}
+                />
+              </CopyToClipboard>
+            </Flex>
+            <span>{address}</span>
+          </Flex>
+          <Flex vertical className="mt8">
+            <span className="t3">Total Balance (ZKT)</span>
+            <span>{balance.amount || 0}</span>
+          </Flex>
+        </div>
+      ),
+    },
+    // {
+    //   key: 2,
+    //   label: (
+    //     <Flex className="px8" align="center" style={{ height: '48px' }} gap={8}>
+    //       <img src={activityIcon} width={24} height={24} />
+    //       <span className="fw5">Activity</span>
+    //       <Flex flex={1} justify="end">
+    //         <RightOutlined />
+    //       </Flex>
+    //     </Flex>
+    //   ),
+    // },
+    {
+      key: 3,
+      label: (
+        <>
+          <Divider style={{ margin: 0 }} />
+          <Flex className="px8" align="center" style={{ height: '48px' }} gap={8} onClick={() => handleAccountsChanged([])}>
+            <img src={disconnectIcon} width={24} height={24} />
+            <span className="fw5">Disconnect</span>
+            <Flex flex={1} justify="end">
+              <RightOutlined />
+            </Flex>
+          </Flex>
+        </>
+      ),
+    },
+  ];
   return (
     <>
       {connected ? (
         <>
-          <Button
-            type="primary"
-            onClick={async () => {
-              handleAccountsChanged([]);
-            }}
-          >
-            {displaySortAddress(address)}
-          </Button>
+          <Dropdown menu={{ items }} trigger={['click']}>
+            <Button shape="round" type="default" icon={<WalletOutlined />}>
+              {displaySortAddress(address)}
+              <CaretDownOutlined />
+            </Button>
+          </Dropdown>
           {network !== 'livenet' ? (
             <Button type="default" style={{ marginLeft: '12px' }} onClick={handleNetworkChanged}>
               <Text style={{ color: '#e85f5f' }} className="f12">

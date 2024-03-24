@@ -22,6 +22,7 @@ export default defineConfig({
     { path: '/', component: 'Home' },
     { path: '/ecosystem', component: 'Ecosystem' },
     { path: '/bridge', component: 'Bridge' },
+    { path: '/launchpad', component: 'Launchpad' },
   ],
   npmClient: 'pnpm',
   // proxy: {

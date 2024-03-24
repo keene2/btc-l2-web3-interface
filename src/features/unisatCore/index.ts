@@ -6,6 +6,10 @@ export const connectedAtom = atom(false);
 export const publicKeyAtom = atom('');
 export const addressAtom = atom('');
 export const balanceAtom = atom({ confirmed: 0, unconfirmed: 0, total: 0 });
+export const mintBalanceAtom = atom({
+  symbol: 'ZKT',
+  amount: '0',
+});
 export const unisatInstalledAtom = atom(false);
 
 export const toAddressAtom = atom('');

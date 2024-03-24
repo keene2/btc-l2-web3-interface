@@ -6,11 +6,15 @@ import footer4 from '@/assets/logo/footer4.svg';
 import tg_fff from '@/assets/logo/tg_fff.svg';
 import twitter_fff from '@/assets/logo/twitter_fff.svg';
 import { LINKS } from '@/consts/links';
+import { mintBalanceAtom } from '@/features/unisatCore';
 import { ConnectWalletButton } from '@/features/wallet';
 import { isMobile } from '@/helpers';
+import http from '@/helpers/http';
 import { CloseOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { useQuery } from '@tanstack/react-query';
 import type { MenuProps } from 'antd';
 import { Divider, Drawer, Flex, Layout as LayoutComponent, Menu, Tooltip, Typography } from 'antd';
+import { useAtom } from 'jotai';
 import React, { useState } from 'react';
 import { Link } from 'umi';
 
@@ -20,6 +24,7 @@ const items = [
   { key: '', label: 'Home', showInFooter: false },
   { key: 'bridge', label: 'Bridge', showInFooter: true },
   { key: 'staking', label: 'Staking', disabled: true, showInFooter: true },
+  { key: 'launchpad', label: 'Launchpad', showInFooter: true },
   {
     key: 'explorer',
     label: 'Explorer',
@@ -48,6 +53,20 @@ export const MenusView: React.FC = ({
 }: any) => {
   const [visible, setVisible] = React.useState(false);
   const [current, setCurrent] = useState('mail');
+  const [mintBalance, setMintBalance] = useAtom(mintBalanceAtom);
+
+  const res = useQuery({
+    queryKey: ['get-balance-info'],
+    queryFn: async () => {
+      try {
+        const res = await http.post(`balance`, { address });
+        return res;
+        return res.data;
+      } catch (e) {
+        console.log('eeeeeeee: ', e);
+      }
+    },
+  });
 
   const onClick: MenuProps['onClick'] = (e) => {
     console.log('click ', e);
@@ -80,6 +99,7 @@ export const MenusView: React.FC = ({
             <ConnectWalletButton
               connected={connected}
               network={network}
+              balance={mintBalance}
               unisatInstalled={unisatInstalled}
               address={address}
               handleAccountsChanged={handleAccountsChanged}
@@ -150,6 +170,7 @@ export const MenusView: React.FC = ({
         </a>
         <ConnectWalletButton
           connected={connected}
+          balance={mintBalance}
           network={network}
           unisatInstalled={unisatInstalled}
           address={address}
@@ -192,7 +213,7 @@ export const FooterView = () => {
             { img: footer3, href: LINKS.GitHub },
             { img: footer4, href: LINKS.GitBook },
           ].map((item) => (
-            <a href={item.href} target="_blank">
+            <a href={item.href} key={item.href} target="_blank">
               <img src={item.img} width={24} height={24} />
             </a>
           ))}
