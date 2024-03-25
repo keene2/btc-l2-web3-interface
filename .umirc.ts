@@ -25,12 +25,13 @@ export default defineConfig({
     { path: '/launchpad', component: 'Launchpad' },
   ],
   npmClient: 'pnpm',
-  // proxy: {
-  //   '/api': {
-  //     target: 'https://api.zksats.io',
-  //     changeOrigin: true,
-  //     pathRewrite: { '^/api': '' },
-  //   },
-  // },
+  proxy: {
+    '/api': {
+      target: 'http://142.171.239.146:9000',
+      // target: 'https://api.zksats.io',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+  },
   tailwindcss: {},
 });

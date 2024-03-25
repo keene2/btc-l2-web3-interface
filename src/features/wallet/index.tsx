@@ -1,17 +1,20 @@
+import activityIcon from '@/assets/icon/activity-icon.svg';
 import disconnectIcon from '@/assets/icon/disconnect-icon.svg';
-import { balanceAtom, mintBalanceAtom } from '@/features/unisatCore';
+import { LINKS } from '@/consts/links';
+import { balanceAtom, lastHashAtom, mintBalanceAtom } from '@/features/unisatCore';
 import { displaySortAddress, satsToBTC } from '@/helpers';
 import { isMobileAtom } from '@/states';
 import { CaretDownOutlined, CopyOutlined, RightOutlined, WalletOutlined } from '@ant-design/icons';
 import { Button, Divider, Dropdown, Flex, Typography, message } from 'antd';
-import { useAtomValue } from 'jotai';
-import { useAtom } from 'jotai/index';
+import { useAtom, useAtomValue } from 'jotai';
+
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const { Text, Paragraph } = Typography;
 
 export const ConnectWalletButton = ({ connected, unisatInstalled, handleAccountsChanged, handleNetworkChanged, address, network }: any) => {
   const [mintBalance, setMintBalance] = useAtom(mintBalanceAtom);
+  const lastTx = useAtomValue(lastHashAtom);
   const [balance, setBalance] = useAtom(balanceAtom);
   const isMobile = useAtomValue(isMobileAtom);
   if (!unisatInstalled) {
@@ -62,21 +65,20 @@ export const ConnectWalletButton = ({ connected, unisatInstalled, handleAccounts
         </div>
       ),
     },
-    // {
-    //   key: 2,
-    //   // https://explorer.zksats.io/tx/0x130f18ed9c8e3e241c744529052131bd0eff3334177c68e86f462aee840e097f
-    //   label: (
-    //     <a href={`${LINKS.Explorer}/tx`}>
-    //       <Flex className="px8" align="center" style={{ height: '48px' }} gap={8}>
-    //         <img src={activityIcon} width={24} height={24} />
-    //         <span className="fw5">Activity</span>
-    //         <Flex flex={1} justify="end">
-    //           <RightOutlined />
-    //         </Flex>
-    //       </Flex>
-    //     </a>
-    //   ),
-    // },
+    {
+      key: 2,
+      label: (
+        <a href={`${LINKS.Explorer}/tx/0x${lastTx}`} target="_blank">
+          <Flex className="px8" align="center" style={{ height: '48px' }} gap={8}>
+            <img src={activityIcon} width={24} height={24} />
+            <span className="fw5">Activity</span>
+            <Flex flex={1} justify="end">
+              <RightOutlined />
+            </Flex>
+          </Flex>
+        </a>
+      ),
+    },
     {
       key: 3,
       label: (

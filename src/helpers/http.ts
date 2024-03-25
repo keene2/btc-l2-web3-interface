@@ -18,7 +18,7 @@ export function get(url, params?: any) {
 
 // post 请求函数
 export function post(url, data) {
-  return instance.post(url, data);
+  return instance.post(url, data).then((res) => res.data);
 }
 
 const http = {

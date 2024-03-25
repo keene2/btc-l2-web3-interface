@@ -16,6 +16,7 @@ export const toAddressAtom = atom('');
 export const txidsAtom = atom([]);
 
 export const networkAtom = atom(Network.livenet);
+export const lastHashAtom = atom('');
 // subscribe
 // export const unisatStore = createStore();
 //
