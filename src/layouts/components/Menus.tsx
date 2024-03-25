@@ -6,7 +6,6 @@ import footer4 from '@/assets/logo/footer4.svg';
 import tg_fff from '@/assets/logo/tg_fff.svg';
 import twitter_fff from '@/assets/logo/twitter_fff.svg';
 import { LINKS } from '@/consts/links';
-import { mintBalanceAtom } from '@/features/unisatCore';
 import { ConnectWalletButton } from '@/features/wallet';
 import { isMobile } from '@/helpers';
 import http from '@/helpers/http';
@@ -14,7 +13,6 @@ import { CloseOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design
 import { useQuery } from '@tanstack/react-query';
 import type { MenuProps } from 'antd';
 import { Divider, Drawer, Flex, Layout as LayoutComponent, Menu, Tooltip, Typography } from 'antd';
-import { useAtom } from 'jotai';
 import React, { useState } from 'react';
 import { Link } from 'umi';
 
@@ -53,7 +51,6 @@ export const MenusView: React.FC = ({
 }: any) => {
   const [visible, setVisible] = React.useState(false);
   const [current, setCurrent] = useState('mail');
-  const [mintBalance, setMintBalance] = useAtom(mintBalanceAtom);
 
   const res = useQuery({
     queryKey: ['get-balance-info'],
@@ -99,7 +96,6 @@ export const MenusView: React.FC = ({
             <ConnectWalletButton
               connected={connected}
               network={network}
-              balance={mintBalance}
               unisatInstalled={unisatInstalled}
               address={address}
               handleAccountsChanged={handleAccountsChanged}
@@ -170,7 +166,6 @@ export const MenusView: React.FC = ({
         </a>
         <ConnectWalletButton
           connected={connected}
-          balance={mintBalance}
           network={network}
           unisatInstalled={unisatInstalled}
           address={address}
