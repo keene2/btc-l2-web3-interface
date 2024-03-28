@@ -9,7 +9,7 @@ export enum Network {
 
 // 用这个地址测试BTC的流程
 export const PROJECT_ADDRESS = 'tb1pu2ytptdcvsns335x0t3mpcm4mknz27pp5rm4vh4lrq39k09sj6zqlnfhsr';
-export const MINT_PROJECT_ADDRESS = 'tb1pu2ytptdcvsns335x0t3mpcm4mknz27pp5rm4vh4lrq39k09sj6zqlnfhsr';
+export const MINT_PROJECT_ADDRESS = 'tb1pfwa730683xrruaprfmhl67a4edx09dr27lev4eqshyzrvgkmvhjqg42lv9';
 export const TOKEN_ID = 'NbUoqJHV5Jbudgj5jVBXx';
 
 export const MINT_AMOUNT = 1;
